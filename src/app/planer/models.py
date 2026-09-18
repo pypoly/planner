@@ -28,6 +28,9 @@ class Tasklist(models.Model):
     start_date = models.DateField(null=True, default=None, blank=True)
     end_date = models.DateField(null=True, default=None, blank=True)
 
+    def __str__(self):
+        return self.title
+
 class Task(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -38,3 +41,6 @@ class Task(models.Model):
     status = models.IntegerField(choices=TaskStatus.choices(), default=TaskStatus.PENDING)
     deadline = models.DateField(null=True, default=None, blank=True)
     tasklist = models.ForeignKey(Tasklist, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
