@@ -18,7 +18,12 @@ class TaskStatus(IntEnum):
         )
 
 
+class ToDoItemQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(archived=False)
 
+    def done(self):
+        return self.filter(archived=True)
 
 class ToDoListModel(models.Model):
     title = models.CharField(max_length=200)
@@ -29,6 +34,9 @@ class ToDoListModel(models.Model):
     start_date = models.DateField(null=True, default=None, blank=True)
     end_date = models.DateField(null=True, default=None, blank=True)
     archived = models.BooleanField(default=False)
+
+    objects = ToDoItemQuerySet.as_manager()
+
     def __str__(self):
         return self.title
 
