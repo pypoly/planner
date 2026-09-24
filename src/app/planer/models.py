@@ -12,14 +12,15 @@ class TaskStatus(IntEnum):
     @classmethod
     def choices(cls):
         return (
-            ('PENDING', cls.PENDING),
-            ('DONE', cls.DONE),
-            ('CANCELED', cls.CANCELED),
+            (cls.PENDING, 'PENDING'),
+            (cls.DONE, 'DONE'),
+            (cls.CANCELED, 'CANCELED'),
         )
 
 
 
-class Tasklist(models.Model):
+
+class ToDoListModel(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     progress = models.IntegerField(default=0)
@@ -31,16 +32,29 @@ class Tasklist(models.Model):
     def __str__(self):
         return self.title
 
-class Task(models.Model):
+class TaskModel(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     start_date = models.DateField(null=True, default=None, blank=True)
     end_date = models.DateField(null=True, default=None, blank=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=TaskStatus.choices(), default=TaskStatus.PENDING)
     deadline = models.DateField(null=True, default=None, blank=True)
-    tasklist = models.ForeignKey(Tasklist, on_delete=models.CASCADE)
+    tasklist = models.ForeignKey(ToDoListModel, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
+
+
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+@receiver(post_save, sender=TaskModel)
+def update_progress(sender, instance, created, **kwargs):
+    if not created:
+        all_tasks: list[TaskModel] = TaskModel.objects.filter(tasklist=instance.tasklist).exclude(status=TaskStatus.CANCELED)
+        total_count = len(all_tasks)
+        done_count = len([x for x in all_tasks if x.status == TaskStatus.DONE])
+        progress = int((done_count / total_count)*100)
+        ToDoListModel.objects.filter(pk=instance.tasklist.pk).update(progress=progress)
