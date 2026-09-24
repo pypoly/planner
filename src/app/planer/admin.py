@@ -15,8 +15,9 @@ class TaskInline(admin.StackedInline):
 
 
 @admin.register(ToDoListModel)
-class TasklistAdmin(admin.ModelAdmin):
-    fields = ['title', 'user']
-    list_display = ['title', 'user', 'progress']
-    list_editable = ['progress']
+class ToDolistAdmin(admin.ModelAdmin):
+    fields = ['title', 'user',]
+    list_display = ['title', 'user', 'progress', 'archived']
+    list_editable = ['progress','archived']
     inlines = (TaskInline,)
+
