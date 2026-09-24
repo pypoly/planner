@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Улалить</title>
+</head>
+<body>
+Вы уверены, что хотите удалить?
+<a href="{% url 'index' %}"> НЕТ</a>
+    <form method="post" >
+        {% csrf_token %}
+{#        {{ form.as_p }}#}
+        <button type="submit">ДА</button>
+    </form>
+</body>
+</html>

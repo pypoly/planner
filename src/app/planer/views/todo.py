@@ -1,4 +1,6 @@
+from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils import archive
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
 from app.planer.forms.todo import ToDoListCreateForm, ToDoListUpdateForm
@@ -24,9 +26,18 @@ class CreateToDoListView(CreateView):
         return reverse('detail', kwargs={'pk': self.object.pk})
 
 
-# class TodoListDeleteView(DeleteView):
-#     model = ToDoListModel
-#     template_name =
+class TodoListDeleteView(DeleteView):
+    model = ToDoListModel
+    template_name = 'planer/todo/todolist_delete.html'
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.archived = True
+        obj.save()
+        return redirect(reverse('index'))
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'pk': self.object.pk})
 
 
 class ToDoListUpdateView(UpdateView):

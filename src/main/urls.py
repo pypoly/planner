@@ -19,13 +19,14 @@ from django.urls import path
 
 from app.planer.forms.todo import ToDoListUpdateForm
 from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
-from app.planer.views.todo import ToDoListUpdateView
+from app.planer.views.todo import ToDoListUpdateView, TodoListDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('create/', CreateToDoListView.as_view(), name='create'),
     path('detail/<int:pk>/', ToDoDetailView.as_view(), name='detail'),
-    path('update/<int:pk>', ToDoListUpdateView.as_view(), name='update'),
+    path('update/<int:pk>/', ToDoListUpdateView.as_view(), name='update'),
+    path('delete/<int:pk>/', TodoListDeleteView.as_view(), name='delete'),
 
 ]
