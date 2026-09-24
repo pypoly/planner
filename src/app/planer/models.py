@@ -28,7 +28,7 @@ class ToDoListModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField(null=True, default=None, blank=True)
     end_date = models.DateField(null=True, default=None, blank=True)
-
+    archived = models.BooleanField(default=False)
     def __str__(self):
         return self.title
 
