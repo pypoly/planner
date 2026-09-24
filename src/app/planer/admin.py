@@ -1,13 +1,22 @@
 from django.contrib import admin
 
-from app.planer.models import Task, Tasklist
+from app.planer.models import TaskModel, ToDoListModel
 
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    fields = ['name']
-    list_display = ['name']
+# @admin.register(TaskModel)
+# class TaskAdmin(admin.ModelAdmin):
+#     fields = ['name']
+#     list_display = ['name', 'status']
+#     list_editable = ['status']
 
-@admin.register(Tasklist)
+
+class TaskInline(admin.StackedInline):
+    model = TaskModel
+    extra = 0
+
+
+@admin.register(ToDoListModel)
 class TasklistAdmin(admin.ModelAdmin):
-    fields = ['title']
-    list_display = ['title']
+    fields = ['title', 'user']
+    list_display = ['title', 'user', 'progress']
+    list_editable = ['progress']
+    inlines = (TaskInline,)
