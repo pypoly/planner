@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.views.generic import DetailView, CreateView, DeleteView
 
-from app.planer.forms import ToDoListCreateForm
+from app.planer.forms.todo import ToDoListCreateForm
 from app.planer.models import ToDoListModel
 
 

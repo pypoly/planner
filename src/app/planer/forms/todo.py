@@ -1,0 +1,11 @@
+from django import forms
+from django.contrib.auth.models import User
+
+from app.planer.models import ToDoListModel
+
+
+class ToDoListCreateForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    class Meta:
+        model = ToDoListModel
+        fields = ('user', 'title', 'description')
