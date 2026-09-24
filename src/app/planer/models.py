@@ -47,6 +47,7 @@ class TaskModel(models.Model):
         return self.name
 
 
+
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 

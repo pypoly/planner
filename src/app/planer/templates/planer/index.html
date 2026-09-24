@@ -8,9 +8,12 @@
 <body>
 <h1>Задачи на день</h1>
 <ol>
-    {% for task in task_list %}
-       <li>{{ task }} || {{ task.status|status_label|safe }}</li>
+    {% for todolist in todolists_lists %}
+       <li>
+           <a href="{% url 'detail' pk=todolist.pk %}">{{ todolist.title }}</a>
+       </li>
     {% endfor %}
 </ol>
+<a href="{% url 'create' %}"> Создать новую тудушку </a>
 </body>
 </html>

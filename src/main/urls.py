@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app.planer.views import TaskListView, CreateTaskView, TaskDetailView
+from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TaskListView.as_view(), name='index'),
-    path('create/', CreateTaskView.as_view(), name='create'),
-    path('detail<int:pk>/', TaskDetailView.as_view(), name='detail'),
+    path('', IndexView.as_view(), name='index'),
+    path('create/', CreateToDoListView.as_view(), name='create'),
+    path('detail/<int:pk>/', ToDoDetailView.as_view(), name='detail'),
 
 ]
