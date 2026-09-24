@@ -1,7 +1,7 @@
 from django.urls import reverse
-from django.views.generic import DetailView, CreateView, DeleteView
+from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
-from app.planer.forms.todo import ToDoListCreateForm
+from app.planer.forms.todo import ToDoListCreateForm, ToDoListUpdateForm
 from app.planer.models import ToDoListModel
 
 
@@ -24,7 +24,16 @@ class CreateToDoListView(CreateView):
         return reverse('detail', kwargs={'pk': self.object.pk})
 
 
-class TodoListDeleteView(DeleteView):
-    model = ToDoListModel
+# class TodoListDeleteView(DeleteView):
+#     model = ToDoListModel
+#     template_name =
 
+
+class ToDoListUpdateView(UpdateView):
+    model = ToDoListModel
+    form_class = ToDoListUpdateForm
+    template_name = 'planer/todo/todolist_update_form.html'
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'pk': self.object.pk})
 

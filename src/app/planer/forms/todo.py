@@ -9,3 +9,9 @@ class ToDoListCreateForm(forms.ModelForm):
     class Meta:
         model = ToDoListModel
         fields = ('user', 'title', 'description')
+
+
+class ToDoListUpdateForm(forms.ModelForm):
+     class Meta:
+         model = ToDoListModel
+         fields = ('title', 'description')
