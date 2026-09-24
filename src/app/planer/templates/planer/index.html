@@ -1,0 +1,16 @@
+{% load status_label %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<h1>Задачи на день</h1>
+<ol>
+    {% for task in task_list %}
+       <li>{{ task }} || {{ task.status|status_label|safe }}</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
