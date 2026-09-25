@@ -1,3 +1,4 @@
+{% load status_label %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +7,21 @@
 </head>
 <body>
 <a href="{% url 'index' %}">На главную</a>
-    <h1>Детали задачи</h1>
-    {{ object }}
 
-<a href="{% url 'update' pk=object.pk %}">Редактировать</a>
-<a href="{% url 'delete' pk=object.pk %}">Удалить</a>
+    <h1>{{ object.title }}</h1>
+
+<p><a href="{% url 'delete' pk=object.pk %}">Удалить цель</a></p>
+<p><a href="{% url 'update' pk=object.pk %}">Редактировать цель</a></p>
+<br>
+<ol>
+{% for task in tasks %}
+    <li>
+	{{ task.name }}
+        / {% if task.start_date %}{{ task.start_date}}{% else %}Не указано	{% endif %}
+        / {{ task.status | status_label }}
+    </li>
+{% endfor %}
+</ol>
+<p><a href="{% url 'create_task' pk=object.pk %}">Создать таску</a></p>
 </body>
 </html>
