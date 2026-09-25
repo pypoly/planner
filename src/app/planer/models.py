@@ -61,9 +61,11 @@ from django.db.models.signals import post_save
 
 @receiver(post_save, sender=TaskModel)
 def update_progress(sender, instance, created, **kwargs):
-    if not created:
-        all_tasks: list[TaskModel] = TaskModel.objects.filter(tasklist=instance.tasklist).exclude(status=TaskStatus.CANCELED)
-        total_count = len(all_tasks)
+    all_tasks: list[TaskModel] = TaskModel.objects.filter(tasklist=instance.tasklist).exclude(status=TaskStatus.CANCELED)
+    total_count = len(all_tasks)
+    if total_count > 0:
         done_count = len([x for x in all_tasks if x.status == TaskStatus.DONE])
         progress = int((done_count / total_count)*100)
-        ToDoListModel.objects.filter(pk=instance.tasklist.pk).update(progress=progress)
+    else:
+        progress = 0
+    ToDoListModel.objects.filter(pk=instance.tasklist.pk).update(progress=progress)
