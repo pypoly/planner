@@ -9,6 +9,7 @@
 <a href="{% url 'index' %}">На главную</a>
 
     <h1>{{ object.title }} {{ object.progress }}%</h1>
+    <h3>{{ object.description }}</h3>
 
 <p><a href="{% url 'delete' pk=object.pk %}">Удалить цель</a></p>
 <p><a href="{% url 'update' pk=object.pk %}">Редактировать цель</a></p>
