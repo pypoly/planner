@@ -15,7 +15,7 @@ class ToDoDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         obj = self.get_object()
-        ctx['tasks'] = obj.tasks.only('name').order_by('start_date','pk')
+        ctx['tasks'] = obj.tasks.filter(status__in=[TaskStatus.DONE, TaskStatus.PENDING]).only('name').order_by('start_date','pk')
         return ctx
 
 
@@ -28,7 +28,7 @@ class CreateToDoListView(CreateView):
         return {
             'user': self.request.user,
         }
-    
+
     def get_success_url(self):
         return reverse('detail', kwargs={'pk': self.object.pk})
 

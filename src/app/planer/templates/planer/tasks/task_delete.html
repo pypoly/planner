@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Удалить таску</title>
+</head>
+<body>
+<h3>Вы уверены. что хотите удалить?</h3>
+<a href="{% url 'detail' pk=object.id %}">Нет</a>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Да</button>
+</form>
+</body>
+</html>
