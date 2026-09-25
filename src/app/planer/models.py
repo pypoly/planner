@@ -49,7 +49,7 @@ class TaskModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=TaskStatus.choices(), default=TaskStatus.PENDING)
     deadline = models.DateField(null=True, default=None, blank=True)
-    tasklist = models.ForeignKey(ToDoListModel, on_delete=models.CASCADE)
+    tasklist = models.ForeignKey(ToDoListModel, on_delete=models.CASCADE, related_name='tasks')
 
     def __str__(self):
         return self.name
