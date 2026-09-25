@@ -19,6 +19,7 @@ from django.urls import path
 
 from app.planer.forms.todo import ToDoListUpdateForm
 from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
+from app.planer.views.tasks import CreateTaskView, UpdateTaskView
 from app.planer.views.todo import ToDoListUpdateView, TodoListDeleteView
 
 urlpatterns = [
@@ -28,5 +29,6 @@ urlpatterns = [
     path('detail/<int:pk>/', ToDoDetailView.as_view(), name='detail'),
     path('update/<int:pk>/', ToDoListUpdateView.as_view(), name='update'),
     path('delete/<int:pk>/', TodoListDeleteView.as_view(), name='delete'),
-
+    path('create_task/<int:pk>/', CreateTaskView.as_view(), name='create_task'),
+    path('update_task/<int:pk>/', UpdateTaskView.as_view(), name='update_task'),
 ]
