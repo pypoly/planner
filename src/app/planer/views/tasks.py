@@ -1,0 +1,28 @@
+from django.urls import reverse
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView
+
+from app.planer.forms.tasks import CreateTaskForm, UpdateTaskForm
+from app.planer.models import TaskModel, ToDoListModel
+
+
+class CreateTaskView(CreateView):
+    model = TaskModel
+    form_class = CreateTaskForm
+    template_name = 'planer/tasks/tasks_create_form.html'
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'pk': self.object.tasklist.pk})
+
+
+    def get_initial(self):
+        todo = ToDoListModel.objects.get(pk=self.kwargs['pk'])
+        return {
+            'tasklist': todo,
+        }
+
+
+class UpdateTaskView(UpdateView):
+    model = TaskModel
+    form_class = UpdateTaskForm
+    template_name = 'planer/tasks/task_update_form.html'
