@@ -4,13 +4,19 @@ from django.utils import archive
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
 from app.planer.forms.todo import ToDoListCreateForm, ToDoListUpdateForm
-from app.planer.models import ToDoListModel
+from app.planer.models import ToDoListModel, TaskStatus
 
 
 class ToDoDetailView(DetailView):
     model = ToDoListModel
     # form_class = TaskDetailForm
     template_name = 'planer/todo/todolist_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        ctx['tasks'] = obj.tasks.only('name').order_by('start_date','pk')
+        return ctx
 
 
 class CreateToDoListView(CreateView):
@@ -22,6 +28,7 @@ class CreateToDoListView(CreateView):
         return {
             'user': self.request.user,
         }
+    
     def get_success_url(self):
         return reverse('detail', kwargs={'pk': self.object.pk})
 
