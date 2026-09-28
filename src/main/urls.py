@@ -21,6 +21,7 @@ from app.planer.forms.todo import ToDoListUpdateForm
 from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
 from app.planer.views.tasks import CreateTaskView, UpdateTaskView, DeleteTaskView
 from app.planer.views.todo import ToDoListUpdateView, TodoListDeleteView
+from app.users.views import RegisterUser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +33,5 @@ urlpatterns = [
     path('create_task/<int:pk>/', CreateTaskView.as_view(), name='create_task'),
     path('update_task/<int:pk>/', UpdateTaskView.as_view(), name='update_task'),
     path('delete_task/<int:pk>/', DeleteTaskView.as_view(), name='delete_task'),
+    path('register/', RegisterUser.as_view(), name='register'),
 ]
