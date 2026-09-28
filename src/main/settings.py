@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'app.planer',
     'rest_framework',
+    'app.users'
 ]
 
 MIDDLEWARE = [
