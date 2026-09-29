@@ -1,6 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-
+from django.contrib.auth.forms import PasswordChangeForm
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -8,3 +9,11 @@ class UserRegisterForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'username')
+
+
+class MyPasswordChangeForm(PasswordChangeForm):
+    pass

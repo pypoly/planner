@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+</head>
+<body>
+<p>
+    <form method="post">
+    {% csrf_token %}
+    {{ form_profile }}
+    <button value="profile" type="submit" name="action">Сохранить</button>
+    {{ form_profile.errors }}
+    </form>
+</p>
+<p>
+    <form method="post">
+    {% csrf_token %}
+    {{ form_password }}
+    <button value="password" name="action">Сменить пароль</button>
+    {{ form_password.errors }}
+    </form>
+</p>
+</body>
+</html>
