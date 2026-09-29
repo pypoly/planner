@@ -130,7 +130,8 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
-
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
 
 
 JAZZMIN_UI_TWEAKS = {

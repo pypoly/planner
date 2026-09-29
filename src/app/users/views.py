@@ -8,8 +8,14 @@ from app.users.forms import UserRegisterForm
 
 class RegisterUser(CreateView):
     form_class = UserRegisterForm
-    # template_name = 'planer/register.html'
-    success_url = reverse_lazy('login')
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('index')
+    #
+    # def get(self, request:HttpRequest, *args, **kwargs):
+    #     if self.request.user.is_authenticated:
+    #         return redirect('index')
+    #     return super().get(request, *args, **kwargs)
+
 class UserProfileView(LoginRequiredMixin, TemplateView):
     # model = User
     template_name = 'users/profile.html'
