@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Улалить</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+	Удаление дела
+{% endblock %}
+{% block content %}
 Вы уверены, что хотите удалить?
 <a href="{% url 'index' %}"> НЕТ</a>
     <form method="post" >
@@ -12,5 +10,4 @@
 {#        {{ form.as_p }}#}
         <button type="submit">ДА</button>
     </form>
-</body>
-</html>
+{% endblock %}

@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Список задач</title>
-</head>
-<body>
-
+{% extends 'base.html' %}
+{% block title %}
+	Детали таски
+{% endblock %}
+{% block content %}
 <a href="{% url 'index' %}">На главную</a>
 
     <h1>{{ object.title }}</h1>
@@ -15,5 +12,4 @@
         {{ tasks }}
     {% endfor %}
 </ol>
-</body>
-</html>
+{% endblock %}

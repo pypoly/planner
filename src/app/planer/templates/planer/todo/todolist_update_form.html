@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+	Редактирование дела
+{% endblock %}
+{% block content %}
      <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
          <button type="submit">Сохранить</button>
     </form>
-</body>
-</html>
+{% endblock %}

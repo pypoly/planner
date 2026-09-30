@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView
 
@@ -11,6 +12,9 @@ class IndexView(ListView):
 
     def get_queryset(self):
         q = super().get_queryset()
-        q: QuerySet = q.active().filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            q: QuerySet = q.active().filter(user=self.request.user)
+        else:
+            q = ToDoListModel.objects.none()
         return q
 

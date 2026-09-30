@@ -1,12 +1,11 @@
+{% extends  'base.html' %}
+{% block title %}
+	Детали дела
+{% endblock %}
+{% block content %}
 {% load status_label %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Детали</title>
-</head>
-<body>
-<a href="{% url 'index' %}">На главную</a>
+<a href="{% url 'index' %}">На главную</a><br>
+<a href="{% url 'profile' %}">Профиль</a>
 
     <h1>{{ object.title }} {{ object.progress }}%</h1>
     <h3>{{ object.description }}</h3>
@@ -29,5 +28,4 @@
 {% endfor %}
 </ol>
 <p><a href="{% url 'create_task' pk=object.pk %}">Создать таску</a></p>
-</body>
-</html>
+{% endblock %}
