@@ -14,7 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from tempfile import template
+
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 from app.planer.forms.todo import ToDoListUpdateForm
@@ -35,4 +38,7 @@ urlpatterns = [
     path('delete_task/<int:pk>/', DeleteTaskView.as_view(), name='delete_task'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('profile/', UserProfileView.as_view(), name='profile' ),
+    path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+
 ]
