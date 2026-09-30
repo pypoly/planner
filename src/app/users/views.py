@@ -1,15 +1,17 @@
-from django.http import HttpRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
+from django.views.generic.base import TemplateView
 
-from app.users.forms import UserRegisterForm
+from app.users.forms import UserRegisterForm, UserProfileForm, MyPasswordChangeForm
 
 
 class RegisterUser(CreateView):
     form_class = UserRegisterForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('login')
     #
     # def get(self, request:HttpRequest, *args, **kwargs):
     #     if self.request.user.is_authenticated:
@@ -46,7 +48,4 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, ctx)
 
 
-    def get(self, request:HttpRequest, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return redirect('planer:index')
-        return super().get(request, *args, **kwargs)
+
