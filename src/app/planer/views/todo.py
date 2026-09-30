@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import archive
@@ -19,7 +20,7 @@ class ToDoDetailView(DetailView):
         return ctx
 
 
-class CreateToDoListView(CreateView):
+class CreateToDoListView(LoginRequiredMixin, CreateView):
     model = ToDoListModel
     form_class = ToDoListCreateForm
     template_name = 'planer/todo/todolist_create_form.html'
