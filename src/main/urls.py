@@ -18,7 +18,7 @@ from tempfile import template
 
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import path
+from django.urls import path, include
 
 from app.planer.forms.todo import ToDoListUpdateForm
 from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
@@ -40,5 +40,6 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile' ),
     path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-
+    path('api/', include('app.planer.api.urls')),
 ]
+
