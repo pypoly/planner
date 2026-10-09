@@ -1,4 +1,4 @@
-
+set positional-arguments
 
 [working-directory: 'src']
 makemigrations:
@@ -14,3 +14,7 @@ migrate:
 [working-directory: 'src']
 admin:
     uv run python manage.py createsuperuser
+
+[working-directory: 'src']
+test *ARGS:
+    uv run python manage.py test $@
