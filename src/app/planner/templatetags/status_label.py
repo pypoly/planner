@@ -1,6 +1,6 @@
 from django import template
 
-from app.planer.models import TaskStatus
+from app.planner.models import TaskStatus
 
 register = template.Library()
 

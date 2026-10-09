@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView
 
-from app.planer.models import ToDoListModel
+from app.planner.models import ToDoListModel
 
 
 class IndexView(ListView):

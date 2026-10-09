@@ -1,6 +1,6 @@
 from django import forms
 
-from app.planer.models import TaskModel, ToDoListModel
+from app.planner.models import TaskModel, ToDoListModel
 
 
 class DetailTaskForm(forms.ModelForm):

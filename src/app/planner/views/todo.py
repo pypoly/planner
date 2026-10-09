@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.utils import archive
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
-from app.planer.forms.todo import ToDoListCreateForm, ToDoListUpdateForm
-from app.planer.models import ToDoListModel, TaskStatus
+from app.planner.forms.todo import ToDoListCreateForm, ToDoListUpdateForm
+from app.planner.models import ToDoListModel, TaskStatus
 
 
 class ToDoDetailView(DetailView):

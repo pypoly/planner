@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.planer.models import TaskModel, ToDoListModel
+from app.planner.models import TaskModel, ToDoListModel
 
 # @admin.register(TaskModel)
 # class TaskAdmin(admin.ModelAdmin):

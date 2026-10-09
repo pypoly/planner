@@ -20,10 +20,10 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 
-from app.planer.forms.todo import ToDoListUpdateForm
-from app.planer.views import IndexView, CreateToDoListView, ToDoDetailView
-from app.planer.views.tasks import CreateTaskView, UpdateTaskView, DeleteTaskView
-from app.planer.views.todo import ToDoListUpdateView, TodoListDeleteView
+from app.planner.forms.todo import ToDoListUpdateForm
+from app.planner.views import IndexView, CreateToDoListView, ToDoDetailView
+from app.planner.views.tasks import CreateTaskView, UpdateTaskView, DeleteTaskView
+from app.planner.views.todo import ToDoListUpdateView, TodoListDeleteView
 from app.users.views import RegisterUser, UserProfileView
 
 urlpatterns = [
@@ -40,6 +40,6 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile' ),
     path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('api/', include('app.planer.api.urls')),
+    path('api/', include('app.planner.api.urls')),
 ]
 

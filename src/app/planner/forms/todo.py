@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from app.planer.models import ToDoListModel
+from app.planner.models import ToDoListModel
 
 
 class ToDoListCreateForm(forms.ModelForm):

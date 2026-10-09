@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from app.planer.api.serializers import TaskSerializer
-from app.planer.models import TaskModel
+from app.planner.api.serializers import TaskSerializer
+from app.planner.models import TaskModel
 
 
 class TaskViewSet(viewsets.ModelViewSet):

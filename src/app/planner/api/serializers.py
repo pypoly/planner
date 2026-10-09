@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.planer.models import TaskModel, ToDoListModel, TaskStatus
+from app.planner.models import TaskModel, ToDoListModel, TaskStatus
 
 
 class TaskSerializer(serializers.ModelSerializer):

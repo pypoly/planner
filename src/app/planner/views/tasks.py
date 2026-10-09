@@ -3,8 +3,8 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from app.planer.forms.tasks import CreateTaskForm, UpdateTaskForm, DeleteTaskForm
-from app.planer.models import TaskModel, ToDoListModel, TaskStatus
+from app.planner.forms.tasks import CreateTaskForm, UpdateTaskForm, DeleteTaskForm
+from app.planner.models import TaskModel, ToDoListModel, TaskStatus
 
 
 class CreateTaskView(CreateView):
