@@ -17,4 +17,4 @@ admin:
 
 [working-directory: 'src']
 test *ARGS:
-    uv run python manage.py test $@
+    uv run python manage.py test -v 3 $@
