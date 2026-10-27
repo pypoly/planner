@@ -19,8 +19,10 @@ from tempfile import template
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
+from django.views import View
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+from app.admin_panel.views.users_admin import UserListView, UserDetailView, UserTasksView
 from app.planner.forms.todo import ToDoListUpdateForm
 from app.planner.views import IndexView, CreateToDoListView, ToDoDetailView
 from app.planner.views.tasks import CreateTaskView, UpdateTaskView, DeleteTaskView
@@ -28,7 +30,7 @@ from app.planner.views.todo import ToDoListUpdateView, TodoListDeleteView
 from app.users.views import RegisterUser, UserProfileView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('django_admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('create/', CreateToDoListView.as_view(), name='create'),
     path('detail/<int:pk>/', ToDoDetailView.as_view(), name='detail'),
@@ -46,6 +48,9 @@ urlpatterns = [
 
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('admin/', UserListView.as_view(), name='admin'),
+    path('admin/user_detail/<int:pk>/', UserDetailView.as_view(), name='user_detail'),
+    path('admin/user_todo_list/<int:pk>', UserTasksView.as_view(), name = 'user_tasks')
 
 ]
 
