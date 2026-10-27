@@ -29,10 +29,7 @@ class UserTasksView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        print(self.request.path)
         todo_list_pk = self.kwargs['pk']
         ctx['tasks'] = TaskModel.objects.filter(tasklist_id=todo_list_pk)
-        # todo_list = ToDoListModel.objects.get(pk=self.kwargs['pk'])
-        # ctx['tasks'] = TaskModel.objects.filter(tasklist=todo_list)
         return ctx
 
