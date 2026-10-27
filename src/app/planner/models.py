@@ -1,7 +1,9 @@
 from enum import IntEnum, auto
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class TaskStatus(IntEnum):
@@ -25,6 +27,7 @@ class ToDoItemQuerySet(models.QuerySet):
     def done(self):
         return self.filter(archived=True)
 
+
 class ToDoListModel(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
@@ -39,6 +42,7 @@ class ToDoListModel(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class TaskModel(models.Model):
     name = models.CharField(max_length=200)
@@ -55,13 +59,10 @@ class TaskModel(models.Model):
         return self.name
 
 
-
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-
 @receiver(post_save, sender=TaskModel)
 def update_progress(sender, instance, created, **kwargs):
-    all_tasks: list[TaskModel] = TaskModel.objects.filter(tasklist=instance.tasklist).exclude(status=TaskStatus.CANCELED)
+    all_tasks: list[TaskModel] = TaskModel.objects.filter(
+        tasklist=instance.tasklist).exclude(status=TaskStatus.CANCELED)
     total_count = len(all_tasks)
     if total_count > 0:
         done_count = len([x for x in all_tasks if x.status == TaskStatus.DONE])
