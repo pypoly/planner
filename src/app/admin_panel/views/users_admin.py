@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from django.views.generic.base import TemplateView
 
 from app.planner.models import ToDoListModel, TaskModel
 
@@ -32,4 +33,17 @@ class UserTasksView(DetailView):
         todo_list_pk = self.kwargs['pk']
         ctx['tasks'] = TaskModel.objects.filter(tasklist_id=todo_list_pk)
         return ctx
+
+class StatisticUserView(TemplateView):
+    template_name = 'admin_panel/statistic.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        user_count = User.objects.count()
+        ctx['user_count'] = user_count
+        todo_count = ToDoListModel.objects.count()
+        ctx['todo_count'] = todo_count
+        return ctx
+
+
 
