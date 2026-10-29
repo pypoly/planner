@@ -1,38 +1,26 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, UpdateView
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
+from django.contrib.auth.forms import UserChangeForm
 
-from app.planner.models import ToDoListModel, TaskModel
+from app.admin_panel.forms.user import UserUpdateForm
+from app.planner.models import ToDoListModel
 
 
 class UserListView(ListView):
     model = User
     context_object_name = 'users'
-    template_name = 'admin_panel/index.html'
+    template_name = 'admin_panel/users.html'
 
-
-class UserDetailView(DetailView):
+class UserDetailView(UpdateView):
     model = User
+    form_class = UserUpdateForm
     context_object_name = 'user'
     template_name = 'admin_panel/user_detail.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        user_pk = self.kwargs['pk']
-        ctx['todos'] = ToDoListModel.objects.filter(user=user_pk)
-        return ctx
 
-class UserTasksView(DetailView):
-    model = ToDoListModel
-    context_object_name = 'todo'
-    template_name = 'admin_panel/user_tasks.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        todo_list_pk = self.kwargs['pk']
-        ctx['tasks'] = TaskModel.objects.filter(tasklist_id=todo_list_pk)
-        return ctx
 
 class StatisticUserView(TemplateView):
     template_name = 'admin_panel/statistic.html'

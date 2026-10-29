@@ -1,0 +1,32 @@
+<div class="sidebar-wrapper">
+  <nav class="mt-2" aria-label="Main navigation">
+    <!--begin::Sidebar Menu-->
+    <ul
+      class="nav sidebar-menu flex-column"
+      data-lte-toggle="treeview"
+      data-accordion="false"
+      id="navigation"
+    >
+      <li class="nav-item">
+          <a href="{% url 'adm:statistic' %}" class="nav-link">
+          <i class="nav-icon bi bi-speedometer"></i>
+          <p>
+             Главная
+          </p>
+        </a>
+        <a href="{% url 'adm:index' %}" class="nav-link">
+          <i class="nav-icon bi bi-speedometer"></i>
+          <p>
+             Задачи
+          </p>
+        </a>
+           <a href="{% url 'adm:users' %}" class="nav-link">
+          <i class="nav-icon bi bi-speedometer"></i>
+          <p>
+             Юзеры
+          </p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

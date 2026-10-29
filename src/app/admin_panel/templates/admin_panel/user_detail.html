@@ -2,15 +2,10 @@
 {% load static %}
 
 {% block content %}
-    <ol>
-	 {% for todo in todos %}
-	 	<li>
-            <a href="{% url 'user_tasks' pk=todo.id %}">
-                {{ todo }}
-            </a>
-
-        </li>
-	 {% endfor %}
-    </ol>
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+    </form>
 {% endblock %}
 
