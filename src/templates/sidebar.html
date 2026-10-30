@@ -1,3 +1,4 @@
+{% load active_link_tags %}
 <div class="sidebar-wrapper">
   <nav class="mt-2" aria-label="Main navigation">
     <!--begin::Sidebar Menu-->
@@ -8,19 +9,19 @@
       id="navigation"
     >
       <li class="nav-item">
-          <a href="{% url 'adm:statistic' %}" class="nav-link">
+          <a href="{% url 'adm:statistic' %}" class="nav-link {% active_link 'adm:statistic' strict=True %}">
           <i class="nav-icon bi bi-speedometer"></i>
           <p>
              Главная
           </p>
         </a>
-        <a href="{% url 'adm:index' %}" class="nav-link">
+        <a href="{% url 'adm:index' %}" class="nav-link {% active_link 'adm:index || adm:todo_detail || adm:todo_update || adm:task_update' strict=True %}">
           <i class="nav-icon bi bi-speedometer"></i>
           <p>
              Задачи
           </p>
         </a>
-           <a href="{% url 'adm:users' %}" class="nav-link">
+           <a href="{% url 'adm:users' %}" class="nav-link {% active_link 'adm:users || adm:user_detail' strict=True %}">
           <i class="nav-icon bi bi-speedometer"></i>
           <p>
              Юзеры

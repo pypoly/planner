@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'app.users',
     'rest_framework_simplejwt',
     'drf_spectacular',
-    'app.admin_panel.apps.AdminPanelConfig'
+    'app.admin_panel.apps.AdminPanelConfig',
+    'active_link',
 ]
 
 MIDDLEWARE = [
