@@ -9,6 +9,9 @@
             {% csrf_token %}
             <button type="submit">Выйти</button>
         </form>
+    {% if user.is_staff %}
+        <a href="{% url 'admin_panel:index' %}">Админка</a>
+    {% endif %}
 <h1>Все цели</h1>
 <ol>
     {% for todolist in todolists_lists %}
