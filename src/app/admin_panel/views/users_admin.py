@@ -24,6 +24,7 @@ class UserListView(StaffRequiredMixin, ListView):
     model = User
     context_object_name = 'users'
     template_name = 'admin_panel/users.html'
+    paginate_by = 15
 
 class UserDetailView(StaffRequiredMixin, TemplateView):
     template_name = 'admin_panel/user_detail.html'

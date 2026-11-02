@@ -2,12 +2,80 @@
 {% load static %}
 
 {% block content %}
-    <ol>
-        {% for user in users %}
-            <li>
-                <a href="{% url 'adm:user_detail' pk=user.pk %}">{{ user }}</a>
-            </li>
-            <a href="{% url 'adm:index' %}">Перейти к задачам</a>
-    {% endfor %}
-    </ol>
+{#    <ol>#}
+{#        {% for user in users %}#}
+{#            <li>#}
+{#                <a href="{% url 'adm:user_detail' pk=user.pk %}">{{ user }}</a>#}
+{#            </li>#}
+{#            <a href="{% url 'adm:index' %}">Перейти к задачам</a>#}
+{#    {% endfor %}#}
+{#    </ol>#}
+
+     <div class="row">
+              <div class="col-md-12">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h3 class="card-title">Юзеры</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">id</th>
+                          <th>Имя</th>
+                          <th>Дата регистрации</th>
+                          <th>Активен</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for user in users %}
+                        <tr class="align-middle">
+                          <td>{{ user.id }}</td>
+                          <td><a href="{% url 'adm:user_detail' pk=user.pk %}">{{ user }}</a></td>
+                          <td> {{ user.date_joined }} </td>
+                          <td>
+                          {% if user.is_active %}
+                          	✅
+                              {% else %}
+                              ❌
+                          {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                  <div class="card-footer clearfix">
+
+{#                    <ul class="pagination pagination-sm m-0 float-end">#}
+{#                      <li class="page-item">#}
+{#                        <a class="page-link" href="#">&laquo;</a>#}
+{#                      </li>#}
+{#                      <li class="page-item">#}
+{#                        <a class="page-link" href="#">1</a>#}
+{#                      </li>#}
+{#                      <li class="page-item">#}
+{#                        <a class="page-link" href="#">2</a>#}
+{#                      </li>#}
+{#                      <li class="page-item">#}
+{#                        <a class="page-link" href="#">3</a>#}
+{#                      </li>#}
+{#                      <li class="page-item">#}
+{#                        <a class="page-link" href="#">&raquo;</a>#}
+{#                      </li>#}
+{#                    </ul>#}
+                      {% include 'admin_panel/pagination.html' %}
+                  </div>
+
+
+
+                </div>
+                </div>
+                </div>
 {% endblock %}
+
+
+
+
