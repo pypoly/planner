@@ -2,12 +2,67 @@
 {% load static %}
 
 {% block content %}
-	<ol>
-    {% for todo in todo_list %}
-    	<li>{{ todo }}</li>
-        <a href="{% url 'adm:todo_detail' pk=todo.pk %}">Редактировать тудушку</a>
-    {% endfor %}
 
-    </ol>
+    <div class="row">
+          <div class="col-md-12">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Задачи</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                        <th style="width: 10px">id</th>
+{#                          <th>id</th>#}
+                          <th>Название</th>
+                          <th>Прогресс</th>
+                          <th>Активен</th>
+                          <th>Начало</th>
+                          <th>Конец</th>
+                        </tr>
+                     </thead>
+                      <tbody>
+                      {% for todo in todo_list %}
+                        <tr class="align-middle">
+                        <td>{{ todo.id }}</td>
+                        <td><a href="{% url 'adm:todo_detail' pk=todo.pk %}">{{ todo.title }}</a></td>
+                        <td>{{ todo.progress }}%</td>
+                        <td>
+                        {% if todo.archived %}
+                        	❌
+                        {% else %}
+                           ✅
+                        {% endif %}
+                        </td>
+                        <td>{{ todo.start_date }}</td>
+                        <td>{{todo.end_date }}</td>
+                           </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                  <div class="card-footer clearfix">
+                      {% include 'admin_panel/pagination.html' %}
+                  </div>
+
+
+
+                </div>
+                </div>
+                </div>
+
+
+
+
+
+{#                         #}
+{#                          <li>{{ todo }}</li>#}
+{#        <a href="{% url 'adm:todo_detail' pk=todo.pk %}">Редактировать тудушку</a>#}
+{#    {% endfor %}#}
+{##}
+{#    </ol>#}
 
 {% endblock %}

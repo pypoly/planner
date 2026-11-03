@@ -11,6 +11,7 @@ class ToDoListView(ListView):
     model = ToDoListModel
     context_object_name = 'todo_list'
     template_name = 'admin_panel/todo-list.html'
+    paginate_by = 15
 
     # def get_context_data(self, **kwargs):
     #     ctx = super().get_context_data(**kwargs)
@@ -22,6 +23,7 @@ class ToDoDetailView(DetailView):
     model = ToDoListModel
     context_object_name = 'todo'
     template_name = 'admin_panel/todo-detail.html'
+
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
