@@ -1,16 +1,139 @@
 {% extends 'admin_panel/base.html' %}
 {% load static %}
+{% load date_label %}
 
-{% block content %}
-    <form method="post">
-    {% csrf_token %}
-    {{ form_change_user.as_p }}
-    <button type="submit" name="btn_user">Сохранить</button>
-    </form>
-    <form method="post">
-    {% csrf_token %}
-    {{ form_change_password }}
-    <button type="submit" name="btn_passwd">Сохранить</button>
-    </form>
+{% block title %}Профиль пользователя{% endblock %}
+{% block page_title %}Профиль пользователя{% endblock %}
+
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'adm:statistic' %}">Главная</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'adm:users' %}">Юзеры</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ user_obj.username }}</li>
+    </ol>
+  </nav>
 {% endblock %}
 
+{% block content %}
+  <div class="row g-3">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center mb-3"
+               style="width: 96px; height: 96px; font-size: 2rem" aria-hidden="true">
+            {{ user_obj.username|first|upper }}
+          </div>
+          <h3 class="h5 mb-1">{{ user_obj.username }}</h3>
+          <p class="text-secondary mb-3">{{ user_obj.email|default:"email не указан" }}</p>
+          <div class="d-flex justify-content-center gap-2 mb-3">
+            {% if user_obj.is_active %}
+              <span class="badge text-bg-success">Активен</span>
+            {% else %}
+              <span class="badge text-bg-secondary">Неактивен</span>
+            {% endif %}
+            {% if user_obj.is_staff %}
+              <span class="badge text-bg-info">Стафф</span>
+            {% endif %}
+          </div>
+          <ul class="list-group list-group-flush text-start small">
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">ID</span>
+              <span class="fw-semibold">{{ user_obj.pk }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">Регистрация</span>
+              <span class="fw-semibold">{{ user_obj.date_joined|date_label }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">Последний вход</span>
+              <span class="fw-semibold">{{ user_obj.last_login|date_label }}</span>
+            </li>
+          </ul>
+          <a href="{% url 'adm:users' %}" class="btn btn-outline-secondary w-100 mt-3">
+            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+            К списку
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title mb-0">Данные пользователя</h3>
+        </div>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="card-body">
+            {% if form_change_user.non_field_errors %}
+              <div class="alert alert-danger" role="alert">{{ form_change_user.non_field_errors }}</div>
+            {% endif %}
+            <div class="row g-3">
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.username col='col-md-6' %}
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.email col='col-md-6' %}
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.first_name col='col-md-6' %}
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.last_name col='col-md-6' %}
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.is_active col='col-md-6' %}
+              {% include 'admin_panel/includes/form_field.html' with field=form_change_user.is_staff col='col-md-6' %}
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-end">
+            <button type="submit" name="btn_user" class="btn btn-primary">
+              <i class="bi bi-check-lg me-1" aria-hidden="true"></i>
+              Сохранить
+            </button>
+          </div>
+        </form>
+
+        <div class="card-body border-top">
+          <h4 class="h6 mb-3">Смена пароля</h4>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form_change_password.non_field_errors %}
+              <div class="alert alert-danger" role="alert">{{ form_change_password.non_field_errors }}</div>
+            {% endif %}
+            <div class="row g-2 align-items-end">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form_change_password.password.id_for_label }}">Новый пароль</label>
+                <div class="input-group">
+                  {{ form_change_password.password }}
+                  <button type="button" class="btn btn-outline-secondary" data-password-toggle
+                          data-target="{{ form_change_password.password.id_for_label }}"
+                          aria-label="Показать пароль" title="Показать пароль">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+                {% for error in form_change_password.password.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-md-auto">
+                <button type="submit" name="btn_passwd" class="btn btn-warning">
+                  <i class="bi bi-key me-1" aria-hidden="true"></i>
+                  Сменить пароль
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+    document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.target);
+        if (!input) return;
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        button.querySelector('i').className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+        button.setAttribute('aria-label', show ? 'Скрыть пароль' : 'Показать пароль');
+      });
+    });
+  </script>
+{% endblock %}

@@ -20,6 +20,7 @@ class TaskStatus(IntEnum):
         )
 
 
+
 class ToDoItemQuerySet(models.QuerySet):
     def active(self):
         return self.filter(archived=False)

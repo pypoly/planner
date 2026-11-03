@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ title }}</title>
+    <title>{% block title %}Админ-панель{% endblock %}</title>
 
     <!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
     <script>
@@ -55,16 +55,8 @@
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
-    <meta name="title" content="AdminLTE 4 | User Profile" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta
-      name="description"
-      content="AdminLTE is a free Bootstrap 5 admin dashboard template with almost 50 example pages, built with vanilla JS and designed with accessibility in mind."
-    />
-    <meta
-      name="keywords"
-      content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel"
-    />
+    <meta name="author" content="Planer" />
+    <meta name="description" content="Панель управления планировщиком задач." />
     <!--end::Primary Meta Tags-->
 
     <!--begin::Accessibility Features-->
@@ -210,60 +202,15 @@
             </li>
             <!--end::Color Mode Toggle-->
 
-            <!--begin::User Menu Dropdown-->
-{#            <li class="nav-item dropdown user-menu">#}
-{#              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">#}
-{#                <img#}
-{#                  src="../assets/img/user2-160x160.jpg"#}
-{#                  class="user-image rounded-circle shadow"#}
-{#                  alt="Alexander Pierce"#}
-{#                />#}
-{#                <span class="d-none d-xl-inline">Alexander Pierce</span>#}
-{#              </a>#}
-{#              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">#}
-{#                <!--begin::User Image-->#}
-{#                <li class="user-header text-bg-primary">#}
-{#                  <img#}
-{#                    src="../assets/img/user2-160x160.jpg"#}
-{#                    class="rounded-circle shadow"#}
-{#                    alt="Alexander Pierce"#}
-{#                  />#}
-{#                  <p>#}
-{#                    Alexander Pierce - Web Developer#}
-{#                    <small>Member since Nov. 2023</small>#}
-{#                  </p>#}
-{#                </li>#}
-{#                <!--end::User Image-->#}
-{#                <!--begin::Menu Body-->#}
-{#                <li class="user-body">#}
-{#                  <!--begin::Row-->#}
-{#                  <div class="row">#}
-{#                    <div class="col-4 text-center">#}
-{#                      <a href="#">Followers</a>#}
-{#                    </div>#}
-{#                    <div class="col-4 text-center">#}
-{#                      <a href="#">Sales</a>#}
-{#                    </div>#}
-{#                    <div class="col-4 text-center">#}
-{#                      <a href="#">Friends</a>#}
-{#                    </div>#}
-{#                  </div>#}
-{#                  <!--end::Row-->#}
-{#                </li>#}
-{#                <!--end::Menu Body-->#}
-{#                <!--begin::Menu Footer-->#}
-{#                <li class="user-footer">#}
-{#                  <a href="#" class="btn btn-outline-secondary">Profile</a>#}
-{#                  <a href="#" class="btn btn-outline-danger float-end">Sign out</a>#}
-{#                </li>#}
-{#                <!--end::Menu Footer-->#}
-{#              </ul>#}
-{#            </li>#}
-            <!--end::User Menu Dropdown-->
+            <li class="nav-item d-flex align-items-center">
               <form method="post" action="{% url 'logout' %}">
-                  {% csrf_token %}
-              <button type="submit">Выход</button>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>
+                  Выход
+                </button>
               </form>
+            </li>
           </ul>
           <!--end::End Navbar Links-->
         </div>
@@ -287,16 +234,16 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm-6">
-                <h1 class="mb-0 fs-3">{{ title }}</h1>
+                <h1 class="mb-0 fs-3">{% block page_title %}Админ-панель{% endblock %}</h1>
               </div>
-              <div class="col-sm-6">
-{#                <nav aria-label="breadcrumb">#}
-{#                  <ol class="breadcrumb float-sm-end">#}
-{#                    <li class="breadcrumb-item"><a href="#">Home</a></li>#}
-{#                    <li class="breadcrumb-item"><a href="#">User</a></li>#}
-{#                    <li class="breadcrumb-item active" aria-current="page">Profile</li>#}
-{#                  </ol>#}
-{#                </nav>#}
+              <div class="col-sm-6 d-flex justify-content-sm-end align-items-center">
+                {% block breadcrumbs %}
+                  <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                      <li class="breadcrumb-item active" aria-current="page">Главная</li>
+                    </ol>
+                  </nav>
+                {% endblock %}
               </div>
             </div>
           </div>
@@ -311,15 +258,8 @@
       </main>
       <!--begin::Footer-->
       <footer class="app-footer">
-        <!--begin::To the end-->
-                <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-{#          Copyright &copy; 2014-2026&nbsp;#}
-{#          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.#}
-        </strong>
-{#        All rights reserved.#}
-        <!--end::Copyright-->
+        <div class="float-end d-none d-sm-inline">{% block footer_note %}{% endblock %}</div>
+        <strong>Planer</strong> &middot; панель управления
       </footer>
       <!--end::Footer-->
     </div>
@@ -339,7 +279,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../js/adminlte.js"></script>
+    <script src="{% static 'admin_panel/js/adminlte.js' %}"></script>
     <!--end::Required Plugin(AdminLTE)-->
     <!--begin::OverlayScrollbars Configure-->
     <script>
@@ -377,5 +317,7 @@
      module (since 4.1) — no page script needed. Only the no-flash snippet
      in <head> stays inline, because it must run before first paint. -->
     <!--end::Color Mode Toggle-->
+
+    {% block extra_scripts %}{% endblock %}
   </body>
 </html>

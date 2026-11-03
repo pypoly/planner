@@ -2,47 +2,168 @@
 {% load static %}
 {% load date_label %}
 
+{% block title %}{{ todo.title }}{% endblock %}
+{% block page_title %}{{ todo.title }}{% endblock %}
+
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'adm:statistic' %}">Главная</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'adm:index' %}">Задачи</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ todo.title }}</li>
+    </ol>
+  </nav>
+{% endblock %}
 
 {% block content %}
-    <a href="{% url 'adm:todo_update' pk=todo.pk %}">Редактировать тудушку</a>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3 class="card-title">{{ todo.title }}</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th style="width: 10px">id</th>
-                            <th>Название</th>
-                            <th>Статус</th>
-                            <th>Дедлайн</th>
-                            <th>Начало</th>
-                            <th>Конец</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for task in tasks %}
-                            <tr class="align-middle">
-                            <td>{{ task.id }}</td>
-                            <td><a href="{% url 'adm:task_update' pk=task.pk %}">{{ task.name }}</a></td>
-                            <td>{{ task.get_status_display }}</td>
-                            <td>{{ task.deadline|date_label }}</td>
-                            <td>{{ task.start_date|date_label }}</td>
-                            <td>{{ task.end_date|date_label }}</td>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer clearfix">
-                    {% include 'admin_panel/pagination.html' %}
-                </div>
-
-
+  <div class="row g-3 mb-4">
+    <div class="col-lg-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="d-flex flex-wrap align-items-start gap-2 mb-3">
+            <div>
+              <h2 class="h4 mb-1">{{ todo.title }}</h2>
+              <div class="text-secondary small">Создан пользователем {{ todo.user }}</div>
             </div>
+            <div class="ms-auto d-flex align-items-center gap-2">
+              {% if todo.archived %}
+                <span class="badge text-bg-secondary">Архив</span>
+              {% else %}
+                <span class="badge text-bg-success">Активный</span>
+              {% endif %}
+              <a href="{% url 'adm:todo_update' pk=todo.pk %}" class="btn btn-sm btn-flat"
+                 title="Редактировать список" aria-label="Редактировать список">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          {% if todo.description %}
+            <p class="mb-3">{{ todo.description }}</p>
+          {% else %}
+            <p class="text-secondary mb-3">Описание не заполнено.</p>
+          {% endif %}
+
+          <div class="d-flex justify-content-between small text-secondary mb-1">
+            <span>Прогресс</span>
+            <span>{{ todo.progress }}%</span>
+          </div>
+          <div class="progress mb-3" style="height: 8px">
+            <div class="progress-bar {% if todo.progress == 100 %}bg-success{% endif %}"
+                 role="progressbar" style="width: {{ todo.progress }}%"
+                 aria-valuenow="{{ todo.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+
         </div>
+      </div>
     </div>
 
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h3 class="card-title mb-0">Сроки</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush small">
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">Начало</span>
+              <span class="fw-semibold">{{ todo.start_date|date_label }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">Конец</span>
+              <span class="fw-semibold">{{ todo.end_date|date_label }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between px-0">
+              <span class="text-secondary">Задач</span>
+              <span class="fw-semibold">{{ page_obj.paginator.count }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title mb-0">Задачи списка</h3>
+    </div>
+
+    <div class="card-body border-bottom py-2">
+      <form method="get" class="filter-toolbar d-flex flex-nowrap align-items-center gap-2 w-100" role="search">
+        <input type="search" name="q" value="{{ request.GET.q|default:'' }}" class="form-control form-control-sm filter-search flex-grow-1 w-auto"
+               placeholder="Поиск по названию" aria-label="Поиск по названию задачи" />
+        <select name="status" class="form-select form-select-sm w-auto flex-shrink-0" aria-label="Статус задачи">
+          <option value="">Все статусы</option>
+          <option value="1" {% if request.GET.status == '1' %}selected{% endif %}>PENDING</option>
+          <option value="2" {% if request.GET.status == '2' %}selected{% endif %}>DONE</option>
+          <option value="3" {% if request.GET.status == '3' %}selected{% endif %}>CANCELED</option>
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary flex-shrink-0">
+          <i class="bi bi-search me-1" aria-hidden="true"></i>
+          Найти
+        </button>
+        {% if request.GET.q or request.GET.status %}
+          <a href="{% url 'adm:todo_detail' pk=todo.pk %}" class="btn btn-sm btn-outline-secondary flex-shrink-0">Сбросить</a>
+        {% endif %}
+      </form>
+    </div>
+
+    <div class="card-body p-0">
+      {% if tasks %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th style="width: 4rem">ID</th>
+                <th>Название</th>
+                <th>Статус</th>
+                <th>Дедлайн</th>
+                <th>Начало</th>
+                <th>Конец</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task in tasks %}
+                <tr>
+                  <td class="text-secondary">{{ task.id }}</td>
+                  <td>
+                    <a href="{% url 'adm:task_update' pk=task.pk %}" class="fw-semibold text-decoration-none">
+                      {{ task.name }}
+                    </a>
+                  </td>
+                  <td>
+                    {% if task.status == 1 %}
+                      <span class="badge text-bg-warning">PENDING</span>
+                    {% elif task.status == 2 %}
+                      <span class="badge text-bg-success">DONE</span>
+                    {% elif task.status == 3 %}
+                      <span class="badge text-bg-danger">CANCELED</span>
+                    {% else %}
+                      <span class="badge text-bg-secondary">{{ task.get_status_display }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-secondary">{{ task.deadline|date_label }}</td>
+                  <td class="text-secondary">{{ task.start_date|date_label }}</td>
+                  <td class="text-secondary">{{ task.end_date|date_label }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <i class="bi bi-check2-square" aria-hidden="true"></i>
+          <p class="mb-1 fw-semibold">Задачи не найдены</p>
+          <p class="mb-3">Измените условия поиска или сбросьте фильтры.</p>
+          <a href="{% url 'adm:todo_detail' pk=todo.pk %}" class="btn btn-sm btn-outline-secondary">Сбросить фильтры</a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if tasks %}
+      <div class="card-footer clearfix">
+        {% include 'admin_panel/pagination.html' %}
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

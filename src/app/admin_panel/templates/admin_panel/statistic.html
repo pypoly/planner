@@ -1,10 +1,190 @@
 {% extends 'admin_panel/base.html' %}
 {% load static %}
 
+{% block title %}Статистика{% endblock %}
+{% block page_title %}Статистика{% endblock %}
+
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item active" aria-current="page">Главная</li>
+    </ol>
+  </nav>
+{% endblock %}
+
 {% block content %}
+  <div class="row g-3">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="metric-icon rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" aria-hidden="true">
+            <i class="bi bi-people"></i>
+          </div>
+          <div>
+            <div class="metric-value">{{ user_count }}</div>
+            <div class="text-secondary small">Пользователи</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-   <h3>Статистика</h3>
-    <p>Количсетво юзеров: {{ user_count }}</p>
-    <p>Количество тудушек: {{ todo_count }}</p>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="metric-icon rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" aria-hidden="true">
+            <i class="bi bi-list-task"></i>
+          </div>
+          <div>
+            <div class="metric-value">{{ todo_count }}</div>
+            <div class="text-secondary small">Списки задач</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="col-sm-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="metric-icon rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" aria-hidden="true">
+            <i class="bi bi-check2-circle"></i>
+          </div>
+          <div>
+            <div class="metric-value">{{ todo_active }}</div>
+            <div class="text-secondary small">Активные списки</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="metric-icon rounded-circle bg-secondary-subtle text-secondary d-flex align-items-center justify-content-center" aria-hidden="true">
+            <i class="bi bi-archive"></i>
+          </div>
+          <div>
+            <div class="metric-value">{{ todo_archived }}</div>
+            <div class="text-secondary small">Архивные списки</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-1">
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-header">
+          <h3 class="card-title mb-0">Списки задач</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="todo-chart" aria-label="Активные и архивные списки задач" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="card h-100">
+        <div class="card-header">
+          <h3 class="card-title mb-0">Задачи по статусам</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="status-chart" aria-label="Количество задач по статусам" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ task_status_labels|json_script:"task-status-labels" }}
+  {{ task_status_counts|json_script:"task-status-counts" }}
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script>
+    (() => {
+      'use strict';
+
+      const root = document.documentElement;
+      const read = (id) => JSON.parse(document.getElementById(id).textContent);
+      const labels = read('task-status-labels');
+      const counts = read('task-status-counts');
+      const todoActive = Number({{ todo_active|default:0 }});
+      const todoArchived = Number({{ todo_archived|default:0 }});
+
+      const themeColors = () => ({
+        text: root.getAttribute('data-bs-theme') === 'dark' ? '#dee2e6' : '#212529',
+        grid: root.getAttribute('data-bs-theme') === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
+      });
+
+      const todoChart = new Chart(document.getElementById('todo-chart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Активные', 'Архивные'],
+          datasets: [{
+            data: [todoActive, todoArchived],
+            backgroundColor: ['#198754', '#6c757d'],
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { usePointStyle: true, color: themeColors().text },
+            },
+          },
+        },
+      });
+
+      const statusChart = new Chart(document.getElementById('status-chart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Задач',
+            data: counts,
+            backgroundColor: ['#ffc107', '#198754', '#dc3545'],
+            borderRadius: 6,
+            maxBarThickness: 56,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              ticks: { color: themeColors().text },
+              grid: { display: false },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { color: themeColors().text, precision: 0 },
+              grid: { color: themeColors().grid },
+            },
+          },
+        },
+      });
+
+      const syncTheme = () => {
+        const { text, grid } = themeColors();
+        todoChart.options.plugins.legend.labels.color = text;
+        todoChart.update('none');
+        statusChart.options.scales.x.ticks.color = text;
+        statusChart.options.scales.y.ticks.color = text;
+        statusChart.options.scales.y.grid.color = grid;
+        statusChart.update('none');
+      };
+
+      new MutationObserver(syncTheme).observe(root, { attributes: true, attributeFilter: ['data-bs-theme'] });
+    })();
+  </script>
 {% endblock %}

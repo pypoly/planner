@@ -1,15 +1,51 @@
 {% extends 'admin_panel/base.html' %}
 {% load static %}
 
+{% block title %}Редактирование списка{% endblock %}
+{% block page_title %}Редактирование списка{% endblock %}
+
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'adm:statistic' %}">Главная</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'adm:index' %}">Задачи</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'adm:todo_detail' pk=todo.pk %}">{{ todo.title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Редактирование</li>
+    </ol>
+  </nav>
+{% endblock %}
+
 {% block content %}
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title mb-0">Данные списка</h3>
+    </div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="card-body">
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="row g-3">
+          {% include 'admin_panel/includes/form_field.html' with field=form.title col='col-md-8' %}
+          {% include 'admin_panel/includes/form_field.html' with field=form.user col='col-md-4' %}
+          {% include 'admin_panel/includes/form_field.html' with field=form.description col='col-12' %}
+{#          {% include 'admin_panel/includes/form_field.html' with field=form.progress col='col-md-4' %}#}
+          {% include 'admin_panel/includes/form_field.html' with field=form.start_date col='col-md-6' %}
+          {% include 'admin_panel/includes/form_field.html' with field=form.end_date col='col-md-6' %}
+            <div>
+          {% include 'admin_panel/includes/form_field.html' with field=form.archived col='col-md-6' %}
+            </div>
 
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-end gap-2">
+        <a href="{% url 'adm:todo_detail' pk=todo.pk %}" class="btn btn-outline-secondary">Отмена</a>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-lg me-1" aria-hidden="true"></i>
+          Сохранить
+        </button>
+      </div>
     </form>
-
-
-
-
+  </div>
 {% endblock %}

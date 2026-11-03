@@ -2,67 +2,107 @@
 {% load date_label %}
 {% load static %}
 
+{% block title %}Задачи{% endblock %}
+{% block page_title %}Задачи{% endblock %}
+
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'adm:statistic' %}">Главная</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Задачи</li>
+    </ol>
+  </nav>
+{% endblock %}
+
 {% block content %}
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3 class="card-title">Задачи</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th style="width: 10px">id</th>
-                            {#                          <th>id</th>#}
-                            <th>Название</th>
-                            <th>Прогресс</th>
-                            <th>Активен</th>
-                            <th>Начало</th>
-                            <th>Конец</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for todo in todo_list %}
-                            <tr class="align-middle">
-                                <td>{{ todo.id }}</td>
-                                <td><a href="{% url 'adm:todo_detail' pk=todo.pk %}">{{ todo.title }}</a></td>
-                                <td>{{ todo.progress }}%</td>
-                                <td>
-                                    {% if todo.archived %}
-                                        ❌
-                                    {% else %}
-                                        ✅
-                                    {% endif %}
-                                </td>
-                                <td>{{ todo.start_date|date_label }}</td>
-                                <td>{{ todo.end_date|date_label }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer clearfix">
-                    {% include 'admin_panel/pagination.html' %}
-                </div>
-
-
-            </div>
-        </div>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="card-title mb-0">Списки задач</h3>
     </div>
 
+    <div class="card-body border-bottom py-2">
 
+      <form method="get" class="filter-toolbar d-flex flex-nowrap align-items-center gap-2 w-100" role="search">
+        <input type="search" name="q" value="{{ request.GET.q|default:'' }}" class="form-control form-control-sm filter-search flex-grow-1 w-auto"
+               placeholder="Поиск по названию" aria-label="Поиск по названию" />
+        <select name="archived" class="form-select form-select-sm w-auto flex-shrink-0" aria-label="Статус">
+          <option value="">Все статусы</option>
+          <option value="active" {% if request.GET.archived == 'active' %}selected{% endif %}>Активные</option>
+          <option value="archived" {% if request.GET.archived == 'archived' %}selected{% endif %}>Архивные</option>
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary flex-shrink-0">
+          <i class="bi bi-search me-1" aria-hidden="true"></i>
+          Найти
+        </button>
+        {% if request.GET.q or request.GET.archived %}
+          <a href="{% url 'adm:index' %}" class="btn btn-sm btn-outline-secondary flex-shrink-0">Сбросить</a>
+        {% endif %}
+      </form>
+    </div>
 
+    <div class="card-body p-0">
+      {% if todo_list %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th style="width: 4rem">ID</th>
+                <th>Название</th>
+                <th>Пользователь</th>
+                <th style="min-width: 10rem">Прогресс</th>
+                <th>Статус</th>
+                <th>Начало</th>
+                <th>Конец</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for todo in todo_list %}
+                <tr>
+                  <td class="text-secondary">{{ todo.id }}</td>
+                  <td>
+                    <a href="{% url 'adm:todo_detail' pk=todo.pk %}" class="fw-semibold text-decoration-none">
+                      {{ todo.title }}
+                    </a>
+                  </td>
+                  <td class="text-secondary">{{ todo.user }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="progress flex-grow-1" style="height: 6px">
+                        <div class="progress-bar {% if todo.progress == 100 %}bg-success{% endif %}"
+                             role="progressbar" style="width: {{ todo.progress }}%"
+                             aria-valuenow="{{ todo.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <small class="text-secondary">{{ todo.progress }}%</small>
+                    </div>
+                  </td>
+                  <td>
+                    {% if todo.archived %}
+                      <span class="badge text-bg-secondary">Архив</span>
+                    {% else %}
+                      <span class="badge text-bg-success">Активный</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-secondary">{{ todo.start_date|date_label }}</td>
+                  <td class="text-secondary">{{ todo.end_date|date_label }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <i class="bi bi-inbox" aria-hidden="true"></i>
+          <p class="mb-1 fw-semibold">Списки задач не найдены</p>
+          <p class="mb-3">Измените условия поиска или сбросьте фильтры.</p>
+          <a href="{% url 'adm:index' %}" class="btn btn-sm btn-outline-secondary">Сбросить фильтры</a>
+        </div>
+      {% endif %}
+    </div>
 
-
-    {#                         #}
-    {#                          <li>{{ todo }}</li>#}
-    {#        <a href="{% url 'adm:todo_detail' pk=todo.pk %}">Редактировать тудушку</a>#}
-    {#    {% endfor %}#}
-    {##}
-    {#    </ol>#}
-
+    {% if todo_list %}
+      <div class="card-footer clearfix">
+        {% include 'admin_panel/pagination.html' %}
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

@@ -1,3 +1,118 @@
 .sidebar-brand {
   justify-content: flex-start;
 }
+
+.sidebar-brand .brand-text {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-content-header .breadcrumb {
+  --bs-breadcrumb-divider: "/";
+  font-size: 0.875rem;
+}
+
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}
+
+.table thead th {
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--bs-secondary-color);
+}
+
+.card-header .card-title {
+  font-weight: 600;
+}
+
+.metric-card .metric-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 1.35rem;
+}
+
+.metric-card .metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+}
+
+.empty-state .bi {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 2.5rem;
+  opacity: 0.6;
+}
+
+.filter-toolbar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.filter-toolbar .form-control,
+.filter-toolbar .form-select {
+  width: auto;
+  min-width: 0;
+}
+
+.filter-toolbar .filter-search {
+  flex: 1 1 auto;
+  min-width: 8rem;
+}
+
+.filter-toolbar .form-select {
+  flex: 0 0 auto;
+  min-width: 8rem;
+}
+
+.filter-toolbar .btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.progress {
+  background-color: var(--bs-secondary-bg);
+}
+
+.progress-bar {
+  min-width: 0.25rem;
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.btn-flat {
+  --bs-btn-padding-y: 0.25rem;
+  --bs-btn-padding-x: 0.4rem;
+  --bs-btn-color: var(--bs-secondary-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-bg: var(--bs-secondary-bg);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-body-color);
+  --bs-btn-active-bg: var(--bs-secondary-bg);
+  --bs-btn-active-border-color: transparent;
+}
+

@@ -1,81 +1,102 @@
 {% extends 'admin_panel/base.html' %}
 {% load static %}
+{% load date_label %}
 
-{% block content %}
-{#    <ol>#}
-{#        {% for user in users %}#}
-{#            <li>#}
-{#                <a href="{% url 'adm:user_detail' pk=user.pk %}">{{ user }}</a>#}
-{#            </li>#}
-{#            <a href="{% url 'adm:index' %}">Перейти к задачам</a>#}
-{#    {% endfor %}#}
-{#    </ol>#}
+{% block title %}Юзеры{% endblock %}
+{% block page_title %}Юзеры{% endblock %}
 
-     <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h3 class="card-title">Юзеры</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th style="width: 10px">id</th>
-                          <th>Имя</th>
-                          <th>Дата регистрации</th>
-                          <th>Активен</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {% for user in users %}
-                        <tr class="align-middle">
-                          <td>{{ user.id }}</td>
-                          <td><a href="{% url 'adm:user_detail' pk=user.pk %}">{{ user }}</a></td>
-                          <td> {{ user.date_joined }} </td>
-                          <td>
-                          {% if user.is_active %}
-                          	✅
-                              {% else %}
-                              ❌
-                          {% endif %}
-                          </td>
-                        </tr>
-                      {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                  <!-- /.card-body -->
-                  <div class="card-footer clearfix">
-
-{#                    <ul class="pagination pagination-sm m-0 float-end">#}
-{#                      <li class="page-item">#}
-{#                        <a class="page-link" href="#">&laquo;</a>#}
-{#                      </li>#}
-{#                      <li class="page-item">#}
-{#                        <a class="page-link" href="#">1</a>#}
-{#                      </li>#}
-{#                      <li class="page-item">#}
-{#                        <a class="page-link" href="#">2</a>#}
-{#                      </li>#}
-{#                      <li class="page-item">#}
-{#                        <a class="page-link" href="#">3</a>#}
-{#                      </li>#}
-{#                      <li class="page-item">#}
-{#                        <a class="page-link" href="#">&raquo;</a>#}
-{#                      </li>#}
-{#                    </ul>#}
-                      {% include 'admin_panel/pagination.html' %}
-                  </div>
-
-
-
-                </div>
-                </div>
-                </div>
+{% block breadcrumbs %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'adm:statistic' %}">Главная</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Юзеры</li>
+    </ol>
+  </nav>
 {% endblock %}
 
+{% block content %}
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="card-title mb-0">Пользователи</h3>
+    </div>
 
+    <div class="card-body border-bottom py-2">
+      <form method="get" class="filter-toolbar d-flex flex-nowrap align-items-center gap-2 w-100" role="search">
+        <input type="search" name="q" value="{{ request.GET.q|default:'' }}" class="form-control form-control-sm filter-search flex-grow-1 w-auto"
+               placeholder="Имя, логин или email" aria-label="Поиск пользователей" />
+        <select name="is_active" class="form-select form-select-sm w-auto flex-shrink-0" aria-label="Активность">
+          <option value="">Все</option>
+          <option value="1" {% if request.GET.is_active == '1' %}selected{% endif %}>Активные</option>
+          <option value="0" {% if request.GET.is_active == '0' %}selected{% endif %}>Неактивные</option>
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary flex-shrink-0">
+          <i class="bi bi-search me-1" aria-hidden="true"></i>
+          Найти
+        </button>
+        {% if request.GET.q or request.GET.is_active %}
+          <a href="{% url 'adm:users' %}" class="btn btn-sm btn-outline-secondary flex-shrink-0">Сбросить</a>
+        {% endif %}
+      </form>
+    </div>
 
+    <div class="card-body p-0">
+      {% if users %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th style="width: 4rem">ID</th>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Регистрация</th>
+                <th>Активен</th>
+                <th>Админ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td class="text-secondary">{{ user.id }}</td>
+                  <td>
+                    <a href="{% url 'adm:user_detail' pk=user.pk %}" class="fw-semibold text-decoration-none">
+                      {{ user }}
+                    </a>
+                  </td>
+                  <td class="text-secondary">{{ user.email|default:"---" }}</td>
+                  <td class="text-secondary">{{ user.date_joined|date_label }}</td>
+                  <td>
+                    {% if user.is_active %}
+                      <span class="badge text-bg-success">Активен</span>
+                    {% else %}
+                      <span class="badge text-bg-secondary">Неактивен</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if user.is_staff %}
+                      <span class="badge text-bg-info">Да</span>
+                    {% else %}
+                      <span class="text-secondary">---</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <i class="bi bi-people" aria-hidden="true"></i>
+          <p class="mb-1 fw-semibold">Пользователи не найдены</p>
+          <p class="mb-3">Измените условия поиска или сбросьте фильтры.</p>
+          <a href="{% url 'adm:users' %}" class="btn btn-sm btn-outline-secondary">Сбросить фильтры</a>
+        </div>
+      {% endif %}
+    </div>
 
+    {% if users %}
+      <div class="card-footer clearfix">
+        {% include 'admin_panel/pagination.html' %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
