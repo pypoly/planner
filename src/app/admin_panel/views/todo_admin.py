@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.views.generic import UpdateView, DetailView
 from django.views.generic.list import ListView
 
@@ -24,11 +25,14 @@ class ToDoDetailView(DetailView):
     context_object_name = 'todo'
     template_name = 'admin_panel/todo-detail.html'
 
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         todo_list_pk = self.kwargs['pk']
-        ctx['tasks'] = TaskModel.objects.filter(tasklist_id=todo_list_pk).order_by('order', 'created_at')
+        tasks = TaskModel.objects.filter(tasklist_id=todo_list_pk).order_by('order', 'created_at')
+        paginator = Paginator(tasks, 10)
+        page_obj = paginator.get_page(self.request.GET.get('page'))
+        ctx['page_obj'] = page_obj
+        ctx['tasks'] = page_obj.object_list
         return ctx
 
 class ToDoUpdateView(UpdateView):
