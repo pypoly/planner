@@ -14,9 +14,9 @@ class TaskStatus(IntEnum):
     @classmethod
     def choices(cls):
         return (
-            (cls.PENDING, 'PENDING'),
-            (cls.DONE, 'DONE'),
-            (cls.CANCELED, 'CANCELED'),
+            (cls.PENDING, 'В ожидании'),
+            (cls.DONE, 'Выполнено'),
+            (cls.CANCELED, 'Отменено'),
         )
 
 
@@ -43,6 +43,14 @@ class ToDoListModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def task_total(self):
+        return self.tasks.exclude(status=TaskStatus.CANCELED).count()
+
+    @property
+    def task_done(self):
+        return self.tasks.filter(status=TaskStatus.DONE).count()
 
 
 class TaskModel(models.Model):

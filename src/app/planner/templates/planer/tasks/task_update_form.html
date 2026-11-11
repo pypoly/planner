@@ -1,11 +1,34 @@
-{% extends 'base.html' %}
-{% block title %}
-	Редактирование таски
-{% endblock %}
+{% extends 'planer/base.html' %}
+
+{% block title %}Редактирование задачи{% endblock %}
+
 {% block content %}
-    <form method="post">
+<a href="{% url 'detail' pk=object.tasklist_id %}" class="nb-btn nb-btn-ghost mb-3">
+  <i class="fa-solid fa-arrow-left"></i> Назад к цели
+</a>
+
+<div class="d-flex align-items-center justify-content-center flex-wrap gap-2 mb-3">
+  <h2 class="m-0">Редактирование задачи</h2>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_ul }}
-    <button type="submit">Сохранить</button>
-</form>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% for field in form %}
+      {% include 'planer/includes/form_field.html' %}
+    {% endfor %}
+
+    <div class="form-actions">
+      <a href="{% url 'detail' pk=object.tasklist_id %}" class="nb-btn nb-btn-ghost">Отмена</a>
+      <button type="submit" class="nb-btn nb-btn-primary">Сохранить</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

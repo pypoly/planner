@@ -1,12 +1,30 @@
-{% extends 'base.html' %}
-{% block title %}
-	Создание дела
-{% endblock %}
+{% extends 'planer/base.html' %}
+
+{% block title %}Новая цель{% endblock %}
+
 {% block content %}
-<h3>Создание задачи</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Создать</button>
-    </form>
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <h2 class="m-0">Новая цель</h2>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% for field in form %}
+      {% include 'planer/includes/form_field.html' %}
+    {% endfor %}
+
+    <div class="form-actions">
+      <a href="{% url 'index' %}" class="nb-btn nb-btn-ghost">Отмена</a>
+      <button type="submit" class="nb-btn nb-btn-primary">Создать</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

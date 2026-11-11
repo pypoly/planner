@@ -1,24 +1,48 @@
-{% extends 'base.html' %}
-{% load status_label %}
-{% block title %}
-	Главная страница
-{% endblock %}
+{% extends 'planer/base.html' %}
+
+{% block title %}Мои цели{% endblock %}
+
 {% block content %}
-<a href="{% url 'profile' %}">Профиль</a> <br>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Выйти</button>
-        </form>
-    {% if user.is_staff %}
-        <a href="{% url 'admin_panel:index' %}">Админка</a>
-    {% endif %}
-<h1>Все цели</h1>
-<ol>
-    {% for todolist in todolists_lists %}
-       <li>
-           <a href="{% url 'detail' pk=todolist.pk %}">{{ todolist.title }}</a>
-       </li>
-    {% endfor %}
-</ol>
-<a href="{% url 'create' %}"> Создать новую тудушку </a>
+{#<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">#}
+{#  <h2 class="m-0">Мои цели</h2>#}
+{#  <a href="{% url 'create' %}" class="nb-btn nb-btn-primary">#}
+{#    <i class="fa-solid fa-plus"></i> Новая цель#}
+{#  </a>#}
+{#</div>#}
+
+<div class="tabs">
+  <a class="tab{% if request.GET.archived != '1' %} active{% endif %}" href="{% url 'index' %}">
+    Активные
+  </a>
+  <a class="tab{% if request.GET.archived == '1' %} active{% endif %}" href="{% url 'index' %}?archived=1">
+    Архив
+  </a>
+</div>
+
+{% if todolists_lists %}
+  {% for todo in todolists_lists %}
+    {% cycle '#2383e2' '#0f7b6c' '#d9730d' '#9065b0' '#e03e3e' '#dfab01' as goal_color silent %}
+    <a class="goal-card-link" href="{% url 'detail' todo.pk %}">
+      <div class="goal-card">
+        <div class="goal-head">
+          <span class="goal-dot" style="background:{{ goal_color }}"></span>
+          <div class="goal-title-wrap">
+            <div class="goal-title{% if todo.progress == 100 %} is-complete{% endif %}">{{ todo.title }}</div>
+            <div class="goal-meta">{{ todo.task_done }} из {{ todo.task_total }} задач</div>
+          </div>
+          <div class="goal-progress-num" style="color:{{ goal_color }}">{{ todo.progress }}%</div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:{{ todo.progress }}%;background:{{ goal_color }}"></div>
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <i class="fa-regular fa-rectangle-list"></i>
+    <p><strong>Пока ни одной цели</strong></p>
+    <p>Нажмите «Новая цель», чтобы начать.</p>
+  </div>
+{% endif %}
 {% endblock %}

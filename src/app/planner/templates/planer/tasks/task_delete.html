@@ -1,12 +1,22 @@
-{% extends 'base.html' %}
-{% block title %}
-	Удалить таску
-{% endblock %}
+{% extends 'planer/base.html' %}
+
+{% block title %}Отмена задачи{% endblock %}
+
 {% block content %}
-<h3>Вы уверены. что хотите удалить?</h3>
-<a href="{% url 'detail' pk=object.id %}">Нет</a>
-<form method="post">
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <h2 class="m-0">Отменить задачу?</h2>
+</div>
+
+<div class="form-card">
+  <p class="text-muted mb-0">Задача «{{ object.name }}» будет отмечена как отменённая.</p>
+
+  <form method="post" novalidate>
     {% csrf_token %}
-    <button type="submit">Да</button>
-</form>
+
+    <div class="form-actions">
+      <a href="{% url 'detail' pk=object.tasklist_id %}" class="nb-btn nb-btn-ghost">Нет</a>
+      <button type="submit" class="nb-btn nb-btn-primary">Отменить задачу</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

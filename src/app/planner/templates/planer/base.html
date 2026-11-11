@@ -1,0 +1,96 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Мои цели{% endblock %}</title>
+
+  <!-- Ранняя установка темы (без мигания) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('notion-todo-theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="{% static 'planner/css/planner.css' %}?v=4" rel="stylesheet">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="app-shell toolbar-inner">
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="logo-badge"><i class="fa-solid fa-check-double"></i></div>
+        <div>
+          <h1><a href="{% url 'index' %}" class="brand-link">{% block brand %}Мои цели{% endblock %}</a></h1>
+          <p class="subtitle">Приложение для достижения целей</p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        {% if user.is_authenticated %}
+          <div class="stat-pill btn-container">
+              <a href="{% url 'create' %}" class="new-task-btn">
+                <i class="fa-solid fa-plus"></i> Новая цель
+              </a>
+          </div>
+          <div class="stat-pill">
+            <i class="fa-regular fa-circle-check"></i>
+            <strong>{{ global_done|default:0 }}&nbsp;/&nbsp;{{ global_total|default:0 }}</strong>
+          </div>
+        {% endif %}
+
+        <button class="round-btn" id="themeToggle" type="button" title="Переключить тему" aria-label="Переключить тему">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'profile' %}" class="round-btn" title="Профиль" aria-label="Профиль">
+            <i class="fa-solid fa-user"></i>
+          </a>
+
+          <form method="post" action="{% url 'logout' %}" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="round-btn" title="Выйти" aria-label="Выйти">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="round-btn" title="Войти" aria-label="Войти">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  <main class="app-shell main-content">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'planner/js/planner.js' %}?v=4"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

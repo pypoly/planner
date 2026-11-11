@@ -1,31 +1,144 @@
-{% extends  'base.html' %}
-{% block title %}
-	Детали дела
-{% endblock %}
-{% block content %}
+{% extends 'planer/base.html' %}
 {% load status_label %}
-<a href="{% url 'index' %}">На главную</a><br>
-<a href="{% url 'profile' %}">Профиль</a>
 
-    <h1>{{ object.title }} {{ object.progress }}%</h1>
-    <h3>{{ object.description }}</h3>
+{% block title %}{{ todo.title }}{% endblock %}
 
-<p><a href="{% url 'delete' pk=object.pk %}">Удалить цель</a></p>
-<p><a href="{% url 'update' pk=object.pk %}">Редактировать цель</a></p>
-<br>
-<ol>
-{% for task in tasks %}
-    <li>
-	{{ task.name }}
-        / {% if task.start_date %}{{ task.start_date}}{% else %}Не указано	{% endif %}
-        / {{ task.status | status_label }}
-        <a href="{% url 'update_task' pk=task.pk %}">Изменить</a>
-        <form action="{% url 'delete_task' pk=task.pk%}">
-            {% csrf_token %}
-            <button type='submit'>Удалить</button>
-        </form>
-    </li>
-{% endfor %}
-</ol>
-<p><a href="{% url 'create_task' pk=object.pk %}">Создать таску</a></p>
+{% block content %}
+<a href="{% url 'index' %}" class="nb-btn nb-btn-ghost mb-3">
+  <i class="fa-solid fa-arrow-left"></i> К списку целей
+</a>
+
+<div class="detail-header">
+  <div>
+    <h1>{{ todo.title }}</h1>
+    <p class="text-muted mb-2">
+      {% if todo.description %}{{ todo.description }}{% else %}Описание не добавлено{% endif %}
+    </p>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="date-range">
+        <i class="fa-regular fa-calendar"></i>
+        {% if todo.start_date or todo.end_date %}
+          {% if todo.start_date %}{{ todo.start_date|date:"d.m.Y" }}{% else %}…{% endif %}
+          —
+          {% if todo.end_date %}{{ todo.end_date|date:"d.m.Y" }}{% else %}…{% endif %}
+        {% else %}
+          Даты не указаны
+        {% endif %}
+      </span>
+      {% if todo.archived %}
+        <span class="status-badge canceled">Архив</span>
+      {% else %}
+        <span class="status-badge done">Активный</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="detail-actions">
+    <a href="{% url 'update' todo.pk %}" class="nb-btn nb-btn-ghost">
+      <i class="fa-solid fa-pen"></i> Редактировать
+    </a>
+    {% if todo.archived %}
+      <form method="post" action="{% url 'unarchive' todo.pk %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="nb-btn nb-btn-primary">
+          <i class="fa-solid fa-box-open"></i> Вернуть из архива
+        </button>
+      </form>
+    {% else %}
+      <form method="post" action="{% url 'delete' todo.pk %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="nb-btn nb-btn-primary">
+          <i class="fa-solid fa-box-archive"></i> В архив
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="d-flex align-items-center justify-content-between mb-1">
+  <span class="text-muted">Прогресс</span>
+  <strong>{{ todo.progress }}%</strong>
+</div>
+<div class="progress-track mb-4">
+  <div class="progress-fill" style="width:{{ todo.progress }}%;background:var(--nb-blue)"></div>
+</div>
+
+<div class="tasks-toolbar">
+  <div class="tasks-actions">
+    <a href="{% url 'create_task' todo.pk %}" class="nb-btn nb-btn-primary task-add-btn">
+      <i class="fa-solid fa-plus"></i> Добавить задачу
+    </a>
+
+    <div class="task-search">
+      <input type="checkbox" id="taskSearchToggle" class="task-search-checkbox"
+             {% if request.GET.q or request.GET.status %}checked{% endif %}>
+      <label for="taskSearchToggle" class="nb-btn nb-btn-ghost task-search-toggle"
+             title="Поиск по задачам">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="visually-hidden">Поиск по задачам</span>
+      </label>
+
+      <form method="get" class="task-search-panel" id="taskSearchPanel" role="search">
+        <input type="search" name="q" value="{{ request.GET.q|default:'' }}"
+               class="nb-input" placeholder="Поиск по задачам…" aria-label="Поиск по задачам">
+        <select name="status" class="nb-input" aria-label="Статус задачи">
+          <option value=""{% if not request.GET.status %} selected{% endif %}>Все статусы</option>
+          {% for value, label in status_choices %}
+            <option value="{{ value }}"{% if request.GET.status == value|stringformat:"s" %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="nb-btn nb-btn-primary nb-btn-sm">
+          <i class="fa-solid fa-magnifying-glass"></i> Найти
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="tasks-list">
+  {% for task in tasks %}
+    <div class="task-row{% if task.status == 2 %} done{% endif %}">
+      <form method="post" action="{% url 'toggle_task' task.pk %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="task-check"
+                role="checkbox"
+                aria-checked="{% if task.status == 2 %}true{% else %}false{% endif %}"
+                title="Переключить статус">
+          <i class="fa-solid fa-check"></i>
+        </button>
+      </form>
+
+      <div class="task-text">
+        <div>{{ task.name }}</div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mt-1">
+          <span class="status-badge {% if task.status == 1 %}pending{% elif task.status == 2 %}done{% elif task.status == 3 %}canceled{% endif %}">
+            {{ task.status|status_label }}
+          </span>
+          {% if task.start_date or task.end_date or task.deadline %}
+            <span class="date-range">
+              <i class="fa-regular fa-calendar"></i>
+              {% if task.start_date %}{{ task.start_date|date:"d.m.Y" }}{% endif %}
+              {% if task.end_date %}— {{ task.end_date|date:"d.m.Y" }}{% endif %}
+              {% if task.deadline %}<i class="fa-regular fa-clock ms-1"></i> {{ task.deadline|date:"d.m.Y" }}{% endif %}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <a href="{% url 'update_task' task.pk %}" class="nb-btn nb-btn-ghost">
+        Изменить
+      </a>
+      <form method="post" action="{% url 'delete_task' task.pk %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="nb-btn nb-btn-ghost">
+          Удалить
+        </button>
+      </form>
+    </div>
+  {% empty %}
+    <div class="tasks-empty">
+      <i class="fa-regular fa-square-check"></i> Задач пока нет — добавьте первую.
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}

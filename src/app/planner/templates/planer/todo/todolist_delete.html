@@ -1,13 +1,22 @@
-{% extends 'base.html' %}
-{% block title %}
-	Удаление дела
-{% endblock %}
+{% extends 'planer/base.html' %}
+
+{% block title %}Архивирование цели{% endblock %}
+
 {% block content %}
-Вы уверены, что хотите удалить?
-<a href="{% url 'index' %}"> НЕТ</a>
-    <form method="post" >
-        {% csrf_token %}
-{#        {{ form.as_p }}#}
-        <button type="submit">ДА</button>
-    </form>
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+  <h2 class="m-0">Переместить список в архив?</h2>
+</div>
+
+<div class="form-card">
+  <p class="text-muted mb-0">Список «{{ object.title }}» и его задачи будут скрыты из активных целей.</p>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="form-actions">
+      <a href="{% url 'detail' pk=object.pk %}" class="nb-btn nb-btn-ghost">Нет</a>
+      <button type="submit" class="nb-btn nb-btn-primary">В архив</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

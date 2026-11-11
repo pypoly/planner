@@ -1,27 +1,68 @@
-{% extends 'base.html' %}
-{% block title %}
-	Профиль
-{% endblock %}
-{% block content %}
-<p>
-    <form method="post">
-    {% csrf_token %}
-    {{ form_profile }}
-    <button value="profile" type="submit" name="action">Сохранить</button>
-    {{ form_profile.errors }}
-    </form>
-</p>
-<p>
-    <form method="post">
-    {% csrf_token %}
-    {{ form_password }}
-    <button value="password" name="action">Сменить пароль</button>
+{% extends 'planer/base.html' %}
 
-    {{ form_password.errors }}
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<a href="{% url 'index' %}" class="nb-btn nb-btn-ghost mb-3">
+  <i class="fa-solid fa-arrow-left"></i> К списку целей
+</a>
+
+<div class="detail-header">
+  <div>
+    <h1>Профиль</h1>
+    <p class="text-muted mb-0">
+      {{ user.username }}{% if user.email %} · {{ user.email }}{% endif %}
+    </p>
+  </div>
+</div>
+
+<div class="profile-grid">
+  <div class="form-card">
+    <h2 class="form-card-title">Данные профиля</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form_profile.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for error in form_profile.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form_profile %}
+        {% include 'planer/includes/form_field.html' %}
+      {% endfor %}
+
+      <div class="form-actions">
+        <button value="profile" type="submit" name="action" class="nb-btn nb-btn-primary">
+          Сохранить
+        </button>
+      </div>
     </form>
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Выйти</button>
-</form>
-</p>
+  </div>
+
+  <div class="form-card">
+    <h2 class="form-card-title">Смена пароля</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form_password.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for error in form_password.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form_password %}
+        {% include 'planer/includes/form_field.html' %}
+      {% endfor %}
+
+      <div class="form-actions">
+        <button value="password" type="submit" name="action" class="nb-btn nb-btn-primary">
+          Сменить пароль
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
