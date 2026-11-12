@@ -1,4 +1,6 @@
 set positional-arguments
+set dotenv-load
+
 
 [working-directory: 'src']
 makemigrations:
@@ -25,3 +27,8 @@ build:
 up *ARGS:
     docker compose up $@
 
+down:
+    docker compose down
+
+init_admin:
+    docker compose exec web python manage.py createsuperuser
