@@ -23,11 +23,11 @@ DATA_DIR = BASE_DIR/'data'
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEBUG'))
+DEBUG = os.getenv('DEBUG','').lower() in ('1','true','yes','on')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
-
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
 # Application definition
 
 INSTALLED_APPS = [
