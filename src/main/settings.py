@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG','').lower() in ('1','true','yes','on')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
 # Application definition
@@ -128,7 +128,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = DATA_DIR/'static'
 STATICFILES_DIRS = [
-    BASE_DIR / 'src/app/admin_panel/static'
+    BASE_DIR / 'src/app/admin_panel/static',
+    BASE_DIR/'src/static'
 ]
 
 # Email
