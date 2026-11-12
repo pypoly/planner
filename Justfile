@@ -18,3 +18,10 @@ admin:
 [working-directory: 'src']
 test *ARGS:
     uv run python manage.py test -v 3 $@
+
+build:
+    docker compose build
+
+up *ARGS:
+    docker compose up $@
+
