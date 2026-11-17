@@ -20,3 +20,11 @@
 - База данных: SQLite
 - Frontend: Bootstrap 5
 - Инфраструктура: Docker, Nginx, Gunicorn
+
+
+### Запуск:
+```shell
+git clone https://github.com/pypoly/planner.git
+cd planner
+docker compose up --build
+```
