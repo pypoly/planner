@@ -16,8 +16,7 @@
 
 
 ### Технологии:
-
-Backend: Python, Django
-База данных: SQLite
-Frontend: Bootstrap 5
-Инфраструктура: Docker, Nginx, Gunicorn
+- Backend: Python, Django
+- База данных: SQLite
+- Frontend: Bootstrap 5
+- Инфраструктура: Docker, Nginx, Gunicorn
